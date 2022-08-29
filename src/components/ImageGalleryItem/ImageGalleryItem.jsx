@@ -4,7 +4,7 @@ import {
 } from './ImageGalleryItem.styled';
 import  {PropTypes}  from 'prop-types';
 
-const ImageGalleryItem = ({ src, alt, largeImageURL, openModal }) => {
+export const ImageGalleryItem = ({ src, alt, largeImageURL, openModal }) => {
 	return (
 		<ImageGalleryItemStyle onClick={() => openModal(largeImageURL)}>
 			<ImageGalleryImageStyle src={src} alt={alt} />

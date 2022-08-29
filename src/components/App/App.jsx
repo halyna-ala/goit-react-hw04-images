@@ -85,7 +85,7 @@ export const App = () => {
 				{isLoading ? ( <Loader />) : (<ImageGallery
 					openModal={openModal}
 					images={images}
-					
+				
 				/>)}
 
                 {error && <p>something went wrong</p>}
@@ -98,4 +98,3 @@ export const App = () => {
 			</AppContainer>
 		);
 	}
-

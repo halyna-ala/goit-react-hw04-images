@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { PropTypes } from 'prop-types';
 
@@ -9,31 +9,41 @@ import {
 	SearchInput,
 } from './SearchbarForm.styled';
 
-class SearchbarForm extends Component {
-	state = {
-		searchQuery: '',
+const SearchbarForm = ({ onSubmit }) => {
+	const [searchQuery, setSearchQuery] = useState('');
+
+	
+
+	const handleValueChange = event => {
+		setSearchQuery ( event.currentTarget.value.toLowerCase() );
 	};
 
-	handleValueChange = event => {
-		this.setState({ searchQuery: event.currentTarget.value.toLowerCase() });
-	};
-
-	handleSubmit = e => {
+	const handleSubmit = e => {
 		e.preventDefault();
 
-		if (this.state.searchQuery.trim() === '') {
+		if (searchQuery.trim() === '') {
 			toast.warn('Введіть слово для пошуку');
 			return 
 			// alert('Введіть слово для пошуку')
 			;
-		}
-		this.props.onSubmit(this.state.searchQuery);
+		};
+
+	// 	if (setSearchQuery !== searchQuery) { ({
+	// 		searchQuery: searchQuery,
+	// 		page: 1,
+	// 		loadMore: false,
+	// 		images: [],
+
+	// 	});
+	// return;}
+		onSubmit(searchQuery);
+		setSearchQuery('')
 		
 		// this.setState({ searchQuery: '' });
 	};
-	render() {
+	
 		return (
-			<SearchForm onSubmit={this.handleSubmit}>
+			<SearchForm onSubmit={handleSubmit}>
 				<SearchButton type="submit">
 					<SearchLabel>Search</SearchLabel>
 				</SearchButton>
@@ -44,13 +54,13 @@ class SearchbarForm extends Component {
 					autoComplete="off"
 					autoFocus
 					placeholder="Пошук зображень та фотографій"
-					value={this.state.searchQuery}
-					onChange={this.handleValueChange}
+					value={searchQuery}
+					onChange={handleValueChange}
 				/>
 			</SearchForm>
 		);
 	}
-}
+
 
 SearchbarForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
