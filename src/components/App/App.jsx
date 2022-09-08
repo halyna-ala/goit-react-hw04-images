@@ -1,42 +1,41 @@
-import { useState, useEffect }from 'react';
+import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AppContainer } from './App.styled';
-// import { Notify } from "../../components/ImageGallery/ImageGallery.styled";
+import { Notify } from '../../components/ImageGallery/ImageGallery.styled';
 import Searchbar from 'components/Searchbar';
 import ImageGallery from 'components/ImageGallery';
 // import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
-// import ImageErrorView from 'components/ImageErrorView';
+import ImageErrorView from 'components/ImageErrorView';
 import Loader from 'components/Loader';
 import imagesAPI from '../../services/images-api';
-import { animateScroll } from 'react-scroll';
 
-export const App = () => {	
-	const [searchQuery, setSearchQuery] = useState('');
+export const App = () => {
+	
 	const [images, setImages] = useState([]);
+	const [id, setId] = useState(null);
+	const [searchQuery, setSearchQuery] = useState('');
 	const [page, setPage] = useState(1);
 	const [isLoading, setIsLoading] = useState(false);
 	const [loadMore, setLoadMore] = useState(false);
-	const [error, setError] = useState(null);
 	const [showModal, setShowModal] = useState(false);
-	const [largeImageURL, setLargeImageURL] = useState('');
+	const [isEmpty, setIsEmpty] = useState(false);
+	const [error, setError] = useState(null);
 	const perPage = 12;
-	
+
 	useEffect(() => {
 		getPhotos(searchQuery, page);
 	}, [searchQuery, page]);
 
-	const getPhotos = async (searchQuery, page) => {
-		if (!searchQuery) 
-		return;
+	const getPhotos = async (query, page) => {
+		if (!query) return;
 		setIsLoading(true);
-
 		try {
-			const { hits, totalHits } = await imagesAPI(searchQuery, page);
+			const { hits, totalHits } = await imagesAPI(query, page);
 			if (hits.length === 0) {
-				return alert('Sorry, nothing found');
+				setIsEmpty(true);
 			}
 			setImages(prevImages => [...prevImages, ...hits]);
 			setLoadMore(page < Math.ceil(totalHits / perPage));
@@ -46,55 +45,51 @@ export const App = () => {
 			setIsLoading(false);
 		}
 	};
+
 	const handleFormSubmit = searchQuery => {
+		if (searchQuery.trim() !== searchQuery) {
+			
+			return ;
+		}
 		setSearchQuery(searchQuery);
 		setPage(1);
-		setLoadMore(false);
+		setLoadMore(true);
 		setImages([]);
-		
+		setIsEmpty(false);
 	};
 
-	const onloadMore = () => {
-		setIsLoading(true);
-		setPage(prevPage => prevPage + 1);
-		scrollOnMoreButton();
+	const handleSelectImage = imgUrl => {
+	setShowModal(imgUrl);
 	  };
-
-	  const scrollOnMoreButton = () => {
-		animateScroll.scrollToBottom({
-		  duration: 1000,
-		  delay: 10,
-		  smooth: 'linear',
-		});
-	  };
-
-	const openModal = largeImageURL => {
+	const openModal = e => {
 		setShowModal(true);
-		setLargeImageURL(largeImageURL);
+		setId(e.currentTarget.dataset.id);
 	};
 
-	const closeModal = () => {
-		setShowModal(false);
-	  };
+	return (
+		<AppContainer>
+			<Searchbar onSubmit={handleFormSubmit} />
+			<ToastContainer position="top-center" autoClose={3000} />
 
-		return (
-			<AppContainer>
-				<Searchbar onSubmit={handleFormSubmit} />
-				<ToastContainer position="top-center" autoClose={3000} />
-				
-				{isLoading ? ( <Loader />) : (<ImageGallery
-					openModal={openModal}
-					images={images}
-				
-				/>)}
+			{isLoading && <Loader />}
+			{error && <ImageErrorView
+					message={error}
+				/>}
+			{isEmpty && (
+				<ImageErrorView
+					message={`Немає картинки з ім'ям '${searchQuery}'`}
+				/>
+			)}
+			{searchQuery ? (
+				<ImageGallery openModal={openModal} images={images} handleSelectImage={handleSelectImage}/>
+			) : (
+				<Notify>Введіть слово в пошуковий рядочок</Notify>
+			)}
 
-                {error && <p>something went wrong</p>}
-				
-				{loadMore && <Button onloadMore={onloadMore} page={page} />}
-				
-				{showModal && (
-					<Modal largeImageURL={largeImageURL} onClose={closeModal} />
-				)}
-			</AppContainer>
-		);
-	}
+			{loadMore && <Button onClick={() => setPage(page => page + 1)} page={page} />}
+			{showModal && (
+				<Modal images={images} id={Number(id)} onClose={e => setShowModal(false)} />
+			)}
+		</AppContainer>
+	);
+};

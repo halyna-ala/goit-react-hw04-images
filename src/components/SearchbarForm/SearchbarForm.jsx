@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { PropTypes } from 'prop-types';
-
+import { FcSearch } from 'react-icons/fc';
 import {
 	SearchForm,
 	SearchButton,
@@ -12,10 +12,8 @@ import {
 const SearchbarForm = ({ onSubmit }) => {
 	const [searchQuery, setSearchQuery] = useState('');
 
-	
-
 	const handleValueChange = event => {
-		setSearchQuery ( event.currentTarget.value.toLowerCase() );
+		setSearchQuery(event.currentTarget.value.toLowerCase());
 	};
 
 	const handleSubmit = e => {
@@ -23,47 +21,34 @@ const SearchbarForm = ({ onSubmit }) => {
 
 		if (searchQuery.trim() === '') {
 			toast.warn('Введіть слово для пошуку');
-			return 
-			// alert('Введіть слово для пошуку')
-			;
-		};
-
-	// 	if (setSearchQuery !== searchQuery) { ({
-	// 		searchQuery: searchQuery,
-	// 		page: 1,
-	// 		loadMore: false,
-	// 		images: [],
-
-	// 	});
-	// return;}
+			return;
+		}
 		onSubmit(searchQuery);
-		setSearchQuery('')
-		
-		// this.setState({ searchQuery: '' });
+		setSearchQuery('');
 	};
-	
-		return (
-			<SearchForm onSubmit={handleSubmit}>
-				<SearchButton type="submit">
-					<SearchLabel>Search</SearchLabel>
-				</SearchButton>
 
-				<SearchInput
-					name="searchQuery"
-					type="text"
-					autoComplete="off"
-					autoFocus
-					placeholder="Пошук зображень та фотографій"
-					value={searchQuery}
-					onChange={handleValueChange}
-				/>
-			</SearchForm>
-		);
-	}
+	return (
+		<SearchForm onSubmit={handleSubmit}>
+			<SearchButton type="submit">
+				<FcSearch size="30" />
+				<SearchLabel>Search</SearchLabel>
+			</SearchButton>
 
+			<SearchInput
+				name="searchQuery"
+				type="text"
+				autoComplete="off"
+				autoFocus
+				placeholder="Пошук зображень та фотографій"
+				value={searchQuery}
+				onChange={handleValueChange}
+			/>
+		</SearchForm>
+	);
+};
 
 SearchbarForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
+	onSubmit: PropTypes.func.isRequired,
 };
 
 export default SearchbarForm;

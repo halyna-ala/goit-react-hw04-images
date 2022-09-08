@@ -2,13 +2,10 @@ import { SearchbarStyle } from './Searchbar.styled';
 import SearchbarForm from '../SearchbarForm';
 import { PropTypes } from 'prop-types';
 
- const Searchbar = ({ onSubmit }) => {
-
-
+const Searchbar = ({ onSubmit }) => {
 	return (
 		<SearchbarStyle>
-			<SearchbarForm onSubmit={onSubmit}/>
-		
+			<SearchbarForm onSubmit={onSubmit} />
 		</SearchbarStyle>
 	);
 };

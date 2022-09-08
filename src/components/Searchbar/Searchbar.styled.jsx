@@ -20,29 +20,6 @@ top: 0;
 `
 
 
-export const InputWrap = styled.div`
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  top: 3px;
-  top: 7px;
-`;
-
-export const SearchFormInput = styled.input`
-  height: 15px;
-  width: 15px;
-  background-color: #fff;
-  border: 0;
-  border-radius: 50%;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  color: #fff;
-  outline: none;
-  padding: 5px;
-  position: relative;
-  `;
-
-
 // /*
 //  * Стили компонента Searchbar
 //  */

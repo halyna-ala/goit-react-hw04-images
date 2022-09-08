@@ -1,5 +1,4 @@
 import { PropTypes } from 'prop-types';
-
 import { ImageErrorViewStyled } from "./ImageErrorView.styled";
 
 export default function ImageErrorView({ message }) {
@@ -11,5 +10,5 @@ export default function ImageErrorView({ message }) {
 }
 
 ImageErrorView.propTypes = {
-  message: PropTypes.string.isRequired,
+  message: PropTypes.string,
 };
